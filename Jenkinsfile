@@ -56,7 +56,7 @@ pipeline {
                     tagdata.buildId = "${BUILD_ID}" as String
                     tagdata.buildJob = "${JOB_NAME}" as String
                     tagdata.buildTag = "${BUILD_TAG}" as String
-                    //tagdata.appVersion = "${BUILD_VERSION}" as String
+                    tagdata.appVersion = "${BUILD_VERSION}" as String
                     tagdata.buildUrl = "${BUILD_URL}" as String
                     tagdata.iqScanUrl = "${IQ_SCAN_URL}" as String
                     //tagData.promote = "no" as String
@@ -75,7 +75,7 @@ pipeline {
         stage('Upload to Nexus Repository'){
             steps {
                 script {
-									sh 'npm publish --registry ${NPM_REGISTRY}'
+									sh 'npm publish --tag ${BUILD_VERSION} --registry ${NPM_REGISTRY}'
                 }
 
             }
