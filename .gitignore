@@ -12,6 +12,7 @@ public
 node_modules
 node_modules*
 webpack-modules
+webpack-modules*
 functions/node_modules
 functions/lib
 

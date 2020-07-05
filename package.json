@@ -25,7 +25,7 @@
     "release:major": "standard-version --release-as major && git push --follow-tags origin master",
     "update": "ng update --force --all"
   },
-  "private": true,
+  "private": false,
   "engines": {
     "node": ">=12"
   },
