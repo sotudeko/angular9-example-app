@@ -82,6 +82,7 @@
     "ng-lazyload-image": "7.1.0",
     "ngx-cookie": "4.1.2",
     "ngx-logger": "4.1.9",
+    "np": "^6.2.5",
     "rxjs": "6.5.5",
     "tslib": "1.12.0",
     "uuid": "8.0.0",
