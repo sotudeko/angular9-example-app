@@ -32,12 +32,6 @@
   "lint-staged": {
     "*.{js,css,md}": "prettier --write"
   },
-  "husky": {
-    "hooks": {
-      "pre-push": "npm run ci",
-      "pre-commit": "lint-staged"
-    }
-  },
   "dependencies": {
     "@angular-devkit/build-angular": "0.901.7",
     "@angular-devkit/build-ng-packagr": "0.901.5",
