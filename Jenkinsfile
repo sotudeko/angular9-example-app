@@ -75,7 +75,7 @@ pipeline {
         stage('Upload to Nexus Repository'){
             steps {
                 script {
-									sh 'npm publish --tag ${BUILD_VERSION} --registry ${NPM_REGISTRY}'
+									sh 'npm publish --registry ${NPM_REGISTRY}'
                 }
 
             }
