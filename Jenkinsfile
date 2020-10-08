@@ -21,20 +21,28 @@ pipeline {
             }
         }
 
+#        stage('Nexus IQ Scan'){
+#            steps {
+#                script{
+#                
+#                    try {
+#                        def policyEvaluation = nexusPolicyEvaluation failBuildOnNetworkError: true, iqApplication: selectedApplication('angular9-example-app'), iqScanPatterns: [[scanPattern: 'webpack-modules/*']], iqStage: 'build', jobCredentialsId: 'admin'
+#                        echo "Nexus IQ scan succeeded: ${policyEvaluation.applicationCompositionReportUrl}"
+#                        IQ_SCAN_URL = "${policyEvaluation.applicationCompositionReportUrl}"
+#                    } 
+#                    catch (error) {
+#                        def policyEvaluation = error.policyEvaluation
+#                        echo "Nexus IQ scan vulnerabilities detected', ${policyEvaluation.applicationCompositionReportUrl}"
+#                        throw error
+#                    }
+#                }
+#            }
+#        }
+
         stage('Nexus IQ Scan'){
             steps {
                 script{
-                
-                    try {
-                        def policyEvaluation = nexusPolicyEvaluation failBuildOnNetworkError: true, iqApplication: selectedApplication('angular9-example-app'), iqScanPatterns: [[scanPattern: 'webpack-modules/*']], iqStage: 'build', jobCredentialsId: 'admin'
-                        echo "Nexus IQ scan succeeded: ${policyEvaluation.applicationCompositionReportUrl}"
-                        IQ_SCAN_URL = "${policyEvaluation.applicationCompositionReportUrl}"
-                    } 
-                    catch (error) {
-                        def policyEvaluation = error.policyEvaluation
-                        echo "Nexus IQ scan vulnerabilities detected', ${policyEvaluation.applicationCompositionReportUrl}"
-                        throw error
-                    }
+                    sh 'auditjs iq -a ang9-as -h http://localhost:8070 -u admin -p admin123 -s build'
                 }
             }
         }
@@ -75,7 +83,7 @@ pipeline {
         stage('Upload to Nexus Repository'){
             steps {
                 script {
-									sh 'npm publish --registry ${NPM_REGISTRY}'
+					sh 'npm publish --registry ${NPM_REGISTRY}'
                 }
 
             }
