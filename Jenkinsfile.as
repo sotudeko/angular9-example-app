@@ -6,6 +6,7 @@ pipeline {
         NPM_REGISTRY = 'http://localhost:8081/repository/npm-registry'
         TAG_FILE = "${WORKSPACE}/tag.json"
         IQ_SCAN_URL = ""
+        SBOM_FILE= "auditjs-bom.xml"
     }
 
     stages {
@@ -21,11 +22,34 @@ pipeline {
             }
         }
 
-        stage('Nexus IQ Scan'){
+        // stage('Nexus IQ Scan'){
+        //     steps {
+        //         script{
+        //             sh 'auditjs iq -a ang9-as -h http://localhost:8070 -u admin -p admin123 -s build'
+        //             currentBuild.result = "UNSTABLE"
+        //         }
+        //     }
+        // }
+
+        stage('Nexus IQ Scan') {
             steps {
-                script{
-                    sh 'auditjs iq -a ang9-as -h http://localhost:8070 -u admin -p admin123 -s build'
-                    currentBuild.result = "UNSTABLE"
+                sh 'npx auditjs@latest sbom > ${SBOM_FILE}'
+            }
+            post {
+                success {
+                    script{
+                
+                    try {
+                        def policyEvaluation = nexusPolicyEvaluation failBuildOnNetworkError: true, iqApplication: selectedApplication('ang9-auditjs-ci'), iqScanPatterns: [[scanPattern: '${SBOM_FILE}']], iqStage: 'build', jobCredentialsId: 'admin'
+                        echo "Nexus IQ scan succeeded: ${policyEvaluation.applicationCompositionReportUrl}"
+                        IQ_SCAN_URL = "${policyEvaluation.applicationCompositionReportUrl}"
+                    } 
+                    catch (error) {
+                        def policyEvaluation = error.policyEvaluation
+                        echo "Nexus IQ scan vulnerabilities detected', ${policyEvaluation.applicationCompositionReportUrl}"
+                        throw error
+                    }
+                }
                 }
             }
         }
