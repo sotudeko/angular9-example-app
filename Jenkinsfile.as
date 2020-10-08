@@ -25,6 +25,7 @@ pipeline {
             steps {
                 script{
                     sh 'auditjs iq -a ang9-as -h http://localhost:8070 -u admin -p admin123 -s build'
+                    currentBuild.result = "UNSTABLE"
                 }
             }
         }
